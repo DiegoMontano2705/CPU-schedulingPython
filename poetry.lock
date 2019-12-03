@@ -1,0 +1,14 @@
+[[package]]
+category = "main"
+description = "Pretty-print tabular data"
+name = "tabulate"
+optional = false
+python-versions = "*"
+version = "0.8.6"
+
+[metadata]
+content-hash = "211203cd23473a541adce2df5b8bfbf37d3b364fe6a7133fbc07e333c6d2fade"
+python-versions = "^3.7"
+
+[metadata.hashes]
+tabulate = ["5470cc6687a091c7042cee89b2946d9235fe9f6d49c193a4ae2ac7bf386737c8"]
