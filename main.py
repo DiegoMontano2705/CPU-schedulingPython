@@ -14,7 +14,7 @@ class Proceso:
     self.tiempoCPU = 0 # Almacena el tiempo que toma correr en CPU
     self.tiempoTerminado = int() # Almacena el tiempo en que termina un proceso
     self.tiempoRetorno = int() # Almacena el tiempo que tarda en ser completado un proceso (tiempoTerminado-tiempoLlegada)
-    self.interrupciones = Queue(maxsize=0)
+    self.interrupciones = set()  # Almacena las interrupciones en un set
   
   # Actualiza el valor del tiempoTermina de un proceso
   def setTermina(self, tiempoTerminado):
@@ -23,7 +23,7 @@ class Proceso:
 
   # Agrega I/O a cola de interrupciones
   def addInterrupcion(self, tiempo, comienzaIO):
-    self.interrupciones.put((tiempo, comienzaIO))
+    self.interrupciones.update([tiempo, comienzaIO])
 
   # Método para correr el proceso en CPU
   def corre(self):
@@ -45,6 +45,11 @@ class Proceso:
   # Muestra el contenido de objeto Proceso, función para debuggear
   def show(self):
     print("pid:{}\ntiempoLlegada:{}\nquantum:{}\nestatus:{}\ntiempoEspera:{}\ntiempoCPU:{}\ntiempoTerminado:{}\ntiempoRetorno:{}\ncolaInterrupciones:{}\n".format(self.pid, self.tiempoLlegada, self.quantum, self.estatus, self.tiempoEspera, self.tiempoCPU, self.tiempoTerminado, self.tiempoRetorno, self.interrupciones))
+
+# Crea tabla y la imprime 
+def despliegaTabla():
+  table = [["Test", "1", "2", "3", "4"]]
+  print(tabulate(table,headers=[" Evento "," Cola de listos ", " CPU ", " Bloqueados ", " Termiandos "], tablefmt="fancy_grid"))
 
 print('**** Bienvenido a CPU Scheduling Simulator ****')
 
@@ -78,7 +83,7 @@ with open('rrEntrada.txt', "r") as archivoEntrada:
     bloqueados = Queue(maxsize=0)
     terminados = Queue(maxsize=0)
 
-    # Recorre el resto del archivo (a partir de la tercera línea)
+    # Recorre el archivo, crea objetos de procesos y los almacena
     for linea in archivoEntrada:
       # Elimina el \n de la línea y la separa por palabras
       linea = linea.strip().split()
@@ -119,15 +124,14 @@ idProcesoEnCPU = int() # Almacena el id del proceso que se encuentra corriendo
 eventoRealizado = str() # Almacena el string del evento en CPU
 
 
-
-
-# Ciclo donde se simula el CPU , este acabada hasta que ya no hayan procesos en el Diccionario
+# Ciclo donde se simula el CPU, termina cuando llega endSimulacion
 while  relojCPU <= Diccionario[len(Diccionario)].tiempoLlegada:
   
   # Valida si el tiempo de CPU es igual al tiempo de llegada del proceso que está por llegar
   if relojCPU == Diccionario[contador].tiempoLlegada:
     print("proceso {} creado\n".format(contador))
-    imprimirTabla = True
+    #imprimirTabla = True
+    despliegaTabla()
     # Guarda el ID del proceso en la cola de listos
     listos.put(Diccionario[contador].pid)
     # Valida si no hay proceso en CPU, pone el primer proceso de la cola de listos en el CPU
@@ -155,14 +159,19 @@ while  relojCPU <= Diccionario[len(Diccionario)].tiempoLlegada:
 
 
 
-
-
-  if imprimirTabla:
+  #Función que imprime tabla con bool
+  ''' if imprimirTabla:
     # Crea tabla y la imprime 
     table = [["Test", "1", "2", "3", "4"]]
     print(tabulate(table,headers=[" Evento "," Cola de listos ", " CPU ", " Bloqueados ", " Termiandos "], tablefmt="fancy_grid"))
-    imprimirTabla = False
+    imprimirTabla = False '''
 
   # Aumenta un milisegundo el reloj 
   relojCPU = relojCPU + 1
-###
+
+
+
+
+
+
+
